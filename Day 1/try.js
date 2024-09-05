@@ -32,3 +32,70 @@ const longCompanies = companies.filter(
 );
 console.log(longCompanies);
 
+//'İnsanlar' dizisini alın ve 25 yaş ve altındaki tüm kişilerin YALNIZCA 'isim' ve 'e-posta' özelliklerine 
+//sahip nesneleri saklayan 'gençİnsanlar' adında bir dizi oluşturun. `name` özelliğinin adı ve soyadı bulunmalıdır.
+const people = [
+    {
+      firstName: 'John',
+      lastName: 'Doe',
+      email: 'john@gmail.com',
+      phone: '111-111-1111',
+      age: 30,
+    },
+    {
+      firstName: 'Jane',
+      lastName: 'Poe',
+      email: 'jane@gmail.com',
+      phone: '222-222-2222',
+      age: 25,
+    },
+    {
+      firstName: 'Bob',
+      lastName: 'Foe',
+      email: 'bob@gmail.com',
+      phone: '333-333-3333',
+      age: 45,
+    },
+    {
+      firstName: 'Sara',
+      lastName: 'Soe',
+      email: 'Sara@gmail.com',
+      phone: '444-444-4444',
+      age: 19,
+    },
+    {
+      firstName: 'Jose',
+      lastName: 'Koe',
+      email: 'jose@gmail.com',
+      phone: '555-555-5555',
+      age: 23,
+    },
+  ];
+  //Çözüm:
+//const youngPeople = people.filter((person) => person.age <= 25); ilk önce şu şekilde yaşları 25 ise çıktı alırız.
+const youngPeople = people
+    .filter((person) => person.age <= 25)
+    .map((person) => ({
+        name:person.firstName + ' ' + person.lastName,
+        email: person.email,
+    }));
+;
+console.log(youngPeople);
+
+//Dizideki tüm pozitif sayıları toplayın.
+const numbers = [2, -30, 50, 20, -12, -9, 7];
+const positiveSum = numbers
+    .filter((number) => number > 0) //filter ile 0 dan büyük sayıların çıktısını aldık.
+    .reduce((acc, cur) => acc + cur, 0); /*reduce ile topluyoruz toplamak için reducenin içine acc ve cur yazmalıyız ve 
+                                            başlangıç değeri ise 0 olmalıdır*/
+console.log(positiveSum); // 79
+
+//Her sözcüğün ilk harfi büyük olacak şekilde, 
+//"word" dizisindeki sözcüklerle "capitalizedWords" 
+//adında yeni bir dizi oluşturun.
+const words = ['coder', 'programmer', 'developer'];
+const capitalizedWords = words.map(
+    (word) => word[0].toUpperCase() + word.slice(1, word.length)
+);
+console.log(capitalizedWords);
+
