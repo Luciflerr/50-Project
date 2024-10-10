@@ -7,66 +7,78 @@ const firstCardBody = document.querySelectorAll(".card-body")[0];
 const secondCardBody = document.querySelectorAll(".card-body")[1];
 
 eventListeners();
+
 function eventListeners(){
-    form.addEventListener("submit", addTodo); //Submit olayı tetiklendiğinde addTodo fonksiyonunu çalıştır.
+    form.addEventListener("submit",addTodo);
+    document.addEventListener("DOMContentLoaded",loadAllTodos);
+    secondCardBody.addEventListener("click",deleteTodo);
+
+}
+function deleteTodo(e){
+    if(e.target.className === "fa fa-remove"){
+        e.target.parentElement.parentElement.remove();
+        deleteTodoFromStorage(e.target.parentElement.parentElement.textContent);
+        displayMessage("success","Todo Başarıyla Silindi.")
+    }
+}
+function deleteTodoFromStorage(deletetodo){
+    let todos = getTodosFromStorage();
+
+    todos.forEach(function(todo,index){
+        if(todo === deletetodo){
+            todos.splice(index,1);
+        }
+    })
+
+    localStorage.setItem("todos",JSON.stringify(todos));
+
+}
+function loadAllTodos(){
+    let todos = getTodosFromStorage();
+
+    todos.forEach(function(todo){
+        addTodoToUI(todo);
+    })
 
 }
 function addTodo(e){
-    e.preventDefault();
     const newTodo = todoInput.value.trim();
+    if(newTodo === ""){
+        displayMessage("danger","Lütfen bir todo ekleyin.")
+    }else{
+        addTodoToUI(newTodo);
+        addTodoToStorage(newTodo);
+
+        displayMessage("success","Todo başarıyla eklendi.");
+        todoInput.value = "";
+    }
     
-    addTodoToUI(newTodo);
-    addTodoToStorage(newTodo);
-    
+    e.preventDefault();
 }
 function addTodoToUI(newTodo){
     const listItem = document.createElement("li");
+    listItem.className = "list-group-item d-flex justify-content-between";
 
-    if(newTodo === ""){
-        alertFunc("danger","Lütfen bir todo girin!");
-    }
-    else{
-        alertFunc("success","Todo başarıyla eklendi.")
-        listItem.className = "list-group-item d-flex justify-content-between";
-
-        const link = document.createElement("a");
-
-        link.href = "#";
-        link.className = "delete-item";
-        link.innerHTML = "<i class = 'fa fa-remove'></i>";
-
-        listItem.appendChild(document.createTextNode(newTodo));
-
-        listItem.appendChild(link);
-        
-        todoList.appendChild(listItem);
-    }
+    const link = document.createElement("a");
+    link.href = "#";
+    link.className = "delete-item";
+    link.innerHTML = "<i class = 'fa fa-remove'></i>";
+    listItem.appendChild(document.createTextNode(newTodo));
+    listItem.appendChild(link);
     
+    
+    todoList.appendChild(listItem);
 }
-function alertFunc(type,message){
-    /*<div class="alert alert-danger" role="alert">
-        This is a danger alert—check it out!
-    </div>*/
-    const div = document.createElement("div");
-    div.className = `alert alert-${type}`;
-    div.textContent = message;
+function displayMessage(type,message){
+    const alert = document.createElement("div");
+    alert.className = `alert alert-${type}`;
+    alert.textContent = message;
 
-    firstCardBody.appendChild(div);
-
+    firstCardBody.appendChild(alert);
+    
     setTimeout(function(){
-        div.remove();
+        alert.remove();
     },1500)
-}
-function getTodosFromStorage(){
-    let todos;
-
-    if(localStorage.getItem("todos") === null){
-        todos = [];
-    }
-    else{
-        todos = JSON.parse(localStorage.getItem("todos"));
-    }
-    return todos;
 }
 function addTodoToStorage(newTodo){
     let todos = getTodosFromStorage();
@@ -75,3 +87,19 @@ function addTodoToStorage(newTodo){
 
     localStorage.setItem("todos",JSON.stringify(todos));
 }
+function getTodosFromStorage(){
+    let todos;
+    
+    if(localStorage.getItem("todos") === null){
+        todos = [];
+    }
+    else{
+        todos = JSON.parse(localStorage.getItem("todos"));
+    }
+
+    return todos;
+}
+
+
+
+
